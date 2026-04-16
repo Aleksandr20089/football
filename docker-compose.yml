@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:15-bookworm  # Вместо latest лучше юзать проверенную 15-ку
+    container_name: football_postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=football_db
