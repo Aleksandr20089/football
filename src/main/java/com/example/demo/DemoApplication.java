@@ -19,8 +19,8 @@ public class DemoApplication {
         return args -> {
             // Проверяем, если в базе пусто — добавляем игроков
             if (repository.count() == 0) {
-                repository.save(new Player("Лионель Месси", "Нападающий"));
-                repository.save(new Player("Криштиану Роналду", "Нападающий"));
+                repository.save(new Player(null, "Лионель Месси", "Нападающий", null));
+                repository.save(new Player(null, "Криштиану Роналду", "Нападающий", null));
                 System.out.println("База данных инициализирована: Месси и Роналду добавлены!");
             }
         };

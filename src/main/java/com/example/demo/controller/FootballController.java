@@ -1,20 +1,31 @@
 package com.example.demo.controller;
 
-import com.example.demo.repository.PlayerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.example.demo.model.Player;
+import com.example.demo.service.PlayerService;
+import com.example.demo.service.ClubService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/players")
+@RequiredArgsConstructor // ЭТОТ ПАРЕНЬ СОЗДАЕТ КОНСТРУКТОР
 public class FootballController {
 
-    @Autowired
-    private PlayerRepository playerRepository;
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("players", playerRepository.findAll());
-        return "index"; // Это имя файла index.html в templates
+    private final PlayerService playerService;
+    private final ClubService clubService;
+
+    @GetMapping
+    public ResponseEntity<List<Player>> getAllPlayers() {
+        return ResponseEntity.ok(playerService.getAllPlayers());
+    }
+
+    @PostMapping
+    public ResponseEntity<Player> addPlayer(@RequestBody Player player) {
+        return new ResponseEntity<>(playerService.savePlayer(player), HttpStatus.CREATED);
     }
 }
