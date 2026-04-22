@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor  // Обязательно! Нужен для Hibernate, чтобы создавать пустые объекты
-@AllArgsConstructor // Обязательно! Позволяет создавать объекты через new Player(...)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    private String position;
+    private Integer number; // Номер игрока на футболке
 
     @ManyToOne
     @JoinColumn(name = "club_id")
