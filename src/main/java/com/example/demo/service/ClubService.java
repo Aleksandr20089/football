@@ -13,21 +13,55 @@ import java.util.List;
 public class ClubService {
     private final ClubRepository clubRepository;
 
-    public List<Club> findAll() { return clubRepository.findAll(); }
-
-    public Club findById(Long id) {
-        return clubRepository.findById(id).orElseThrow(() -> new RuntimeException("Клуб не найден"));
+    // Тут находим все клубы  все клубы
+    public List<Club> findAll() {
+        return clubRepository.findAll();
     }
 
+    // Найти по ID
+    public Club findById(Long id) {
+        return clubRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Клуб не найден с id: " + id));
+    }
+
+    // Создание клуба
     @Transactional
     public Club save(Club club) {
-        // Проверка на уникальность названия клуба
         if (clubRepository.existsByName(club.getName())) {
-            throw new RuntimeException("Клуб с таким названием уже есть!");
+            throw new RuntimeException("Клуб с названием '" + club.getName() + "' уже существует!");
         }
         return clubRepository.save(club);
     }
 
+    // Обновление названия, тренера и владельца
     @Transactional
-    public void delete(Long id) { clubRepository.deleteById(id); }
+    public Club update(Long id, Club details) {
+        Club club = findById(id);
+
+        // 1. Меняем название (если оно пришло в запросе)
+        if (details.getName() != null) {
+            club.setName(details.getName());
+        }
+
+        // 2. Назначаем тренера
+        if (details.getCoach() != null) {
+            club.setCoach(details.getCoach());
+        }
+
+        // 3. Назначаем владельца
+        if (details.getOwner() != null) {
+            club.setOwner(details.getOwner());
+        }
+
+        return clubRepository.save(club);
+    }
+
+    //
+    @Transactional
+    public void delete(Long id) {
+        if (!clubRepository.existsById(id)) {
+            throw new RuntimeException("Нельзя удалить: клуб не найден");
+        }
+        clubRepository.deleteById(id);
+    }
 }

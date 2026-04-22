@@ -1,59 +1,254 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Football Aggregator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <title>Football Tycoon - Ultra Barca Edition</title>
     <style>
-        /* 2. ПРИНУДИТЕЛЬНО КРАСИМ ФОН ВСЕЙ СТРАНИЦЫ */
+        :root {
+            --barca-blue: #004d98;
+            --barca-red: #a50044;
+            --barca-gold: #edbb00;
+            --field-green: #28a745;
+        }
         body {
-            background-color: #0f172a !important;
-            color: #f8fafc !important;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #1a1a1a; /* Темная тема для солидности */
             margin: 0;
-            padding: 0;
+            color: #eee;
         }
-        .navbar { background-color: #1e293b !important; border-bottom: 2px solid #06b6d4; }
-        .accent-text { color: #22d3ee !important; }
+        header {
+            background: linear-gradient(135deg, var(--barca-blue) 0%, var(--barca-red) 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 5px solid var(--barca-gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .container { padding: 20px; max-width: 1100px; margin: auto; }
 
-        /* Стили для таблицы, чтобы она не была серой */
-        .table-dark {
-            background-color: #1e293b !important;
-            --bs-table-bg: #1e293b !important;
+        .card {
+            background: #2d2d2d;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            border-left: 10px solid var(--barca-red);
+            overflow: hidden;
+            border: 1px solid #444;
         }
+        .form-card {
+            border-left: 10px solid var(--barca-gold);
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            align-items: end;
+            background: #333;
+        }
+        .card-header {
+            background-color: var(--barca-blue);
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .club-identity { display: flex; align-items: center; gap: 15px; }
+        .club-logo { width: 50px; height: 50px; border-radius: 50%; background: white; padding: 2px; }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #555;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #444;
+            color: white;
+        }
+        input::placeholder { color: #aaa; }
+
+        .btn {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 6px;
+            transition: 0.3s;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-gold { background-color: var(--barca-gold); color: var(--barca-blue); }
+        .btn-gold:hover { background-color: white; transform: scale(1.05); }
+        .btn-delete { background-color: var(--barca-red); color: white; }
+        .btn-transfer { background-color: var(--field-green); color: white; }
+
+        table { width: 100%; border-collapse: collapse; background: #2d2d2d; }
+        th { background: #383838; color: var(--barca-gold); padding: 15px; text-align: left; }
+        td { padding: 12px 15px; border-bottom: 1px solid #444; }
+
+        .player-info { display: flex; align-items: center; gap: 10px; }
+        .player-avatar { width: 35px; height: 35px; border-radius: 50%; background: #555; }
+        .pos-badge { font-size: 0.7em; padding: 2px 6px; border-radius: 4px; background: #555; color: #fff; }
+
+        .info-section {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #383838;
+            border-bottom: 1px solid #444;
+        }
+        .stat-box { text-align: center; }
+        .stat-label { font-size: 0.8em; color: #aaa; display: block; margin-bottom: 5px; }
+        .stat-value { font-weight: bold; font-size: 1.1em; color: var(--barca-gold); }
+
+        .section-title { color: var(--barca-gold); font-weight: bold; margin-bottom: 8px; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark mb-4">
-    <div class="container">
-        <span class="navbar-brand mb-0 h1">FOOTBALL <span class="accent-text">AGGREGATOR</span></span>
-    </div>
-</nav>
+<header>
+    <h1>🏆 FOOTBALL MANAGER <span style="color: var(--barca-gold)">ULTRA</span></h1>
+</header>
 
 <div class="container">
-    <div class="row mt-5">
-        <div class="col-12">
-            <h2 class="accent-text mb-4">Текущий состав</h2>
-            <table class="table table-dark table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Имя</th>
-                    <th>Позиция</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="player : ${players}">
-                    <td th:text="${player.id}">1</td>
-                    <td th:text="${player.name}">Имя</td>
-                    <td th:text="${player.position}">Позиция</td>
-                </tr>
-                </tbody>
-            </table>
+
+    <div class="card">
+        <div class="form-card">
+            <div>
+                <div class="section-title">Основать клуб</div>
+                <input type="text" id="clubName" placeholder="Название (напр. Barca)">
+            </div>
+            <button class="btn btn-gold" onclick="addClub()">Создать</button>
         </div>
     </div>
+
+    <div class="card">
+        <div class="form-card" style="border-left-color: var(--field-green);">
+            <div>
+                <div class="section-title">Трансферный рынок</div>
+                <select id="targetClub" style="width: 100%;">
+                    <option value="" disabled selected>Куда покупаем?</option>
+                    <option th:each="club : ${clubs}" th:value="${club.id}" th:text="${club.name}"></option>
+                </select>
+            </div>
+            <div>
+                <input type="text" id="playerName" placeholder="Имя игрока">
+            </div>
+            <div>
+                <select id="playerPosition">
+                    <option value="FWD">FWD (Нап)</option>
+                    <option value="MID">MID (ПЗ)</option>
+                    <option value="DEF">DEF (Защ)</option>
+                    <option value="GK">GK (Вр)</option>
+                </select>
+            </div>
+            <div>
+                <input type="number" id="playerNumber" placeholder="№" style="width: 60px;">
+            </div>
+            <div>
+                <input type="number" id="transferPrice" placeholder="Цена €">
+            </div>
+            <button class="btn btn-transfer" onclick="buyPlayer()">КУПИТЬ</button>
+        </div>
+    </div>
+
+    <h2 style="border-left: 5px solid var(--barca-gold); padding-left: 15px;">АКТИВНЫЕ КЛУБЫ</h2>
+
+    <div th:each="club : ${clubs}" class="card">
+        <div class="card-header">
+            <div class="club-identity">
+                <img class="club-logo" th:src="'https://api.dicebear.com/7.x/identicon/svg?seed=' + ${club.name}">
+                <h3 style="margin: 0;" th:text="${club.name}">Название</h3>
+            </div>
+            <button class="btn btn-delete" style="padding: 8px 15px;" th:onclick="'deleteClub(' + ${club.id} + ')'">Удалить</button>
+        </div>
+
+        <div class="info-section">
+            <div class="stat-box">
+                <span class="stat-label">ТРЕНЕР</span>
+                <span class="stat-value" th:text="${club.coach != null ? club.coach.name : 'Вакантно'}"></span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">ВЛАДЕЛЕЦ</span>
+                <span class="stat-value" th:text="${club.owner != null ? club.owner.name : 'Гос. клуб'}"></span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">БЮДЖЕТ</span>
+                <span class="stat-value" style="color: var(--field-green);" th:text="${club.owner != null ? club.owner.budget + ' €' : '0 €'}"></span>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Игрок</th>
+                <th>Позиция</th>
+                <th>Номер</th>
+                <th style="text-align: right;">Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${club.players}">
+                <td>
+                    <div class="player-info">
+                        <img class="player-avatar" th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${player.name}">
+                        <strong th:text="${player.name}">Имя</strong>
+                    </div>
+                </td>
+                <td><span class="pos-badge" th:text="${player.position != null ? player.position : 'N/A'}"></span></td>
+                <td><span style="color: var(--barca-gold); font-weight: bold;" th:text="'#' + ${player.number}"></span></td>
+                <td style="text-align: right;">
+                    <button class="btn btn-delete" style="padding: 5px 12px; font-size: 0.8em;" th:onclick="'deletePlayer(' + ${player.id} + ')'">FIRE</button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(club.players)}">
+                <td colspan="4" style="text-align: center; color: #777; padding: 30px;">Состав пуст. Время трансферов!</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+    function addClub() {
+        const name = document.getElementById('clubName').value;
+        if(!name) return alert("Введите название!");
+        fetch('/api/clubs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name })
+        }).then(() => location.reload());
+    }
+
+    function buyPlayer() {
+        const clubId = document.getElementById('targetClub').value;
+        const name = document.getElementById('playerName').value;
+        const pos = document.getElementById('playerPosition').value;
+        const num = document.getElementById('playerNumber').value;
+        const price = document.getElementById('transferPrice').value;
+
+        if(!clubId || !name || !num || !price) return alert("Заполни всё, бро!");
+
+        fetch(`/api/players/buy/${clubId}?price=${price}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                number: num,
+                position: pos,
+                marketValue: price
+            })
+        }).then(async res => {
+            if(res.ok) location.reload();
+            else alert(await res.text());
+        });
+    }
+
+    function deletePlayer(id) {
+        if(confirm('Уволить?')) fetch('/api/players/' + id, { method: 'DELETE' }).then(() => location.reload());
+    }
+
+    function deleteClub(id) {
+        if(confirm('Снести клуб?')) fetch('/api/clubs/' + id, { method: 'DELETE' }).then(() => location.reload());
+    }
+</script>
 
 </body>
 </html>
