@@ -1,252 +1,318 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Football Tycoon - Ultra Barca Edition</title>
+    <title>ФУТБОЛЬНАЯ ИМПЕРИЯ PRO</title>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --barca-blue: #004d98;
-            --barca-red: #a50044;
-            --barca-gold: #edbb00;
-            --field-green: #28a745;
+            --bg-dark: #0a0a0f;
+            --card-bg: rgba(255, 255, 255, 0.07);
+            --accent-gold: #ffcc00;
+            --accent-red: #ff3366;
+            --accent-blue: #00ccff;
+            --neon-green: #33ff99;
+            --glass-border: rgba(255, 255, 255, 0.15);
         }
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #1a1a1a; /* Темная тема для солидности */
-            margin: 0;
-            color: #eee;
-        }
-        header {
-            background: linear-gradient(135deg, var(--barca-blue) 0%, var(--barca-red) 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            border-bottom: 5px solid var(--barca-gold);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        .container { padding: 20px; max-width: 1100px; margin: auto; }
 
-        .card {
-            background: #2d2d2d;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-            border-left: 10px solid var(--barca-red);
-            overflow: hidden;
-            border: 1px solid #444;
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: radial-gradient(circle at 50% 0%, #1e1e2f 0%, var(--bg-dark) 100%);
+            color: #ffffff;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .form-card {
-            border-left: 10px solid var(--barca-gold);
-            padding: 25px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            align-items: end;
-            background: #333;
-        }
-        .card-header {
-            background-color: var(--barca-blue);
-            color: white;
-            padding: 15px 25px;
+
+        /* ШАПКА */
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 25px 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
         }
-        .club-identity { display: flex; align-items: center; gap: 15px; }
-        .club-logo { width: 50px; height: 50px; border-radius: 50%; background: white; padding: 2px; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, var(--accent-gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* НАВИГАЦИЯ */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 15px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tab-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.05); }
+
+        .tab-btn.active {
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-blue));
+            border-color: #fff;
+            box-shadow: 0 0 25px rgba(0, 204, 255, 0.5);
+        }
+
+        .container { padding: 0 60px 60px 60px; max-width: 1600px; margin: auto; }
+        .tab-content { display: none; animation: slideUp 0.6s ease-out; }
+        .tab-content.active { display: block; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* КАРТОЧКИ КЛУБОВ */
+        .grid-clubs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 35px;
+        }
+
+        .club-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            position: relative;
+            transition: 0.4s;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .club-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 50px rgba(237, 187, 0, 0.2);
+        }
+
+        .club-info { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
+
+        .club-name { font-size: 24px; font-weight: 900; color: #fff; text-transform: uppercase; }
+
+        .badge-money {
+            background: linear-gradient(90deg, #11998e, #38ef7d);
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .coach-section {
+            background: rgba(0, 204, 255, 0.1);
+            border: 1px dashed var(--accent-blue);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* ТАБЛИЦА ИГРОКОВ ВНУТРИ КАРТОЧКИ */
+        .player-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* ФОРМЫ (АДМИНКА) */
+        .glass-form {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 35px;
+        }
 
         input, select {
-            padding: 12px;
-            border: 1px solid #555;
-            border-radius: 6px;
-            font-size: 14px;
-            background: #444;
-            color: white;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 12px;
+            color: #fff;
+            width: 100%;
+            margin-bottom: 20px;
+            font-family: inherit;
         }
-        input::placeholder { color: #aaa; }
 
         .btn {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 6px;
-            transition: 0.3s;
+            padding: 12px 25px;
+            border-radius: 12px;
             border: none;
+            cursor: pointer;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: 0.3s;
         }
-        .btn-gold { background-color: var(--barca-gold); color: var(--barca-blue); }
-        .btn-gold:hover { background-color: white; transform: scale(1.05); }
-        .btn-delete { background-color: var(--barca-red); color: white; }
-        .btn-transfer { background-color: var(--field-green); color: white; }
 
-        table { width: 100%; border-collapse: collapse; background: #2d2d2d; }
-        th { background: #383838; color: var(--barca-gold); padding: 15px; text-align: left; }
-        td { padding: 12px 15px; border-bottom: 1px solid #444; }
+        .btn-action { background: var(--accent-gold); color: #000; width: 100%; }
+        .btn-sell { background: rgba(255, 51, 102, 0.2); color: #ff3366; border: 1px solid #ff3366; }
+        .btn-buy { background: var(--neon-green); color: #000; }
 
-        .player-info { display: flex; align-items: center; gap: 10px; }
-        .player-avatar { width: 35px; height: 35px; border-radius: 50%; background: #555; }
-        .pos-badge { font-size: 0.7em; padding: 2px 6px; border-radius: 4px; background: #555; color: #fff; }
-
-        .info-section {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-            background: #383838;
-            border-bottom: 1px solid #444;
-        }
-        .stat-box { text-align: center; }
-        .stat-label { font-size: 0.8em; color: #aaa; display: block; margin-bottom: 5px; }
-        .stat-value { font-weight: bold; font-size: 1.1em; color: var(--barca-gold); }
-
-        .section-title { color: var(--barca-gold); font-weight: bold; margin-bottom: 8px; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>🏆 FOOTBALL MANAGER <span style="color: var(--barca-gold)">ULTRA</span></h1>
+    <div class="logo">FOOTBALL EMPIRE <span style="font-weight: 400; color: #fff">| Менеджер</span></div>
+    <div style="font-weight: bold; color: var(--accent-gold)">СЕЗОН 2026</div>
 </header>
+
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab('overview')">🏟️ Мои Клубы</button>
+    <button class="tab-btn" onclick="openTab('transfers')">⚽ Трансферный Рынок</button>
+    <button class="tab-btn" onclick="openTab('admin')">🛠️ Управление БАЗОЙ</button>
+</div>
 
 <div class="container">
 
-    <div class="card">
-        <div class="form-card">
-            <div>
-                <div class="section-title">Основать клуб</div>
-                <input type="text" id="clubName" placeholder="Название (напр. Barca)">
-            </div>
-            <button class="btn btn-gold" onclick="addClub()">Создать</button>
-        </div>
-    </div>
+    <div id="overview" class="tab-content active">
+        <div class="grid-clubs">
+            <div th:each="club : ${clubs}" class="club-card">
+                <button class="btn btn-sell" style="position: absolute; right: 20px; top: 20px; padding: 5px 10px;" th:onclick="'deleteClub(' + ${club.id} + ')'">×</button>
 
-    <div class="card">
-        <div class="form-card" style="border-left-color: var(--field-green);">
-            <div>
-                <div class="section-title">Трансферный рынок</div>
-                <select id="targetClub" style="width: 100%;">
-                    <option value="" disabled selected>Куда покупаем?</option>
-                    <option th:each="club : ${clubs}" th:value="${club.id}" th:text="${club.name}"></option>
-                </select>
-            </div>
-            <div>
-                <input type="text" id="playerName" placeholder="Имя игрока">
-            </div>
-            <div>
-                <select id="playerPosition">
-                    <option value="FWD">FWD (Нап)</option>
-                    <option value="MID">MID (ПЗ)</option>
-                    <option value="DEF">DEF (Защ)</option>
-                    <option value="GK">GK (Вр)</option>
-                </select>
-            </div>
-            <div>
-                <input type="number" id="playerNumber" placeholder="№" style="width: 60px;">
-            </div>
-            <div>
-                <input type="number" id="transferPrice" placeholder="Цена €">
-            </div>
-            <button class="btn btn-transfer" onclick="buyPlayer()">КУПИТЬ</button>
-        </div>
-    </div>
-
-    <h2 style="border-left: 5px solid var(--barca-gold); padding-left: 15px;">АКТИВНЫЕ КЛУБЫ</h2>
-
-    <div th:each="club : ${clubs}" class="card">
-        <div class="card-header">
-            <div class="club-identity">
-                <img class="club-logo" th:src="'https://api.dicebear.com/7.x/identicon/svg?seed=' + ${club.name}">
-                <h3 style="margin: 0;" th:text="${club.name}">Название</h3>
-            </div>
-            <button class="btn btn-delete" style="padding: 8px 15px;" th:onclick="'deleteClub(' + ${club.id} + ')'">Удалить</button>
-        </div>
-
-        <div class="info-section">
-            <div class="stat-box">
-                <span class="stat-label">ТРЕНЕР</span>
-                <span class="stat-value" th:text="${club.coach != null ? club.coach.name : 'Вакантно'}"></span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label">ВЛАДЕЛЕЦ</span>
-                <span class="stat-value" th:text="${club.owner != null ? club.owner.name : 'Гос. клуб'}"></span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label">БЮДЖЕТ</span>
-                <span class="stat-value" style="color: var(--field-green);" th:text="${club.owner != null ? club.owner.budget + ' €' : '0 €'}"></span>
-            </div>
-        </div>
-
-        <table>
-            <thead>
-            <tr>
-                <th>Игрок</th>
-                <th>Позиция</th>
-                <th>Номер</th>
-                <th style="text-align: right;">Действие</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="player : ${club.players}">
-                <td>
-                    <div class="player-info">
-                        <img class="player-avatar" th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${player.name}">
-                        <strong th:text="${player.name}">Имя</strong>
+                <div class="club-info">
+                    <img th:src="'https://api.dicebear.com/7.x/identicon/svg?seed=' + ${club.name}" style="width: 60px; height: 60px; border-radius: 15px;">
+                    <div>
+                        <div class="club-name" th:text="${club.name}">ФК СПАРТАК</div>
+                        <div class="badge-money" th:text="${club.balance + ' €'}">50 000 €</div>
                     </div>
-                </td>
-                <td><span class="pos-badge" th:text="${player.position != null ? player.position : 'N/A'}"></span></td>
-                <td><span style="color: var(--barca-gold); font-weight: bold;" th:text="'#' + ${player.number}"></span></td>
-                <td style="text-align: right;">
-                    <button class="btn btn-delete" style="padding: 5px 12px; font-size: 0.8em;" th:onclick="'deletePlayer(' + ${player.id} + ')'">FIRE</button>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(club.players)}">
-                <td colspan="4" style="text-align: center; color: #777; padding: 30px;">Состав пуст. Время трансферов!</td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+
+                <div class="coach-section">
+                    <span style="font-size: 10px; color: var(--accent-blue); font-weight: 900; text-transform: uppercase;">Главный Тренер:</span>
+                    <div style="font-size: 18px; font-weight: 700;" th:text="${club.coach != null ? club.coach.name : 'ВАКАНСИЯ ОТКРЫТА'}"></div>
+                </div>
+
+                <div style="font-weight: bold; margin-bottom: 10px; font-size: 12px; color: #777;">СОСТАВ КОМАНДЫ:</div>
+                <div th:each="p : ${club.players}" class="player-row">
+                    <div>
+                        <span style="color: var(--accent-gold); font-weight: bold;" th:text="'#' + ${p.number != null ? p.number : '?' }"></span>
+                        <span th:text="${p.name}" style="margin-left: 10px;"></span>
+                    </div>
+                    <button class="btn btn-sell" style="font-size: 10px; padding: 5px 12px" th:onclick="'sellPlayer(' + ${club.id} + ',' + ${p.id} + ')'">ПРОДАТЬ</button>
+                </div>
+                <div th:if="${#lists.isEmpty(club.players)}" style="text-align: center; padding: 20px; color: #555;">Игроков пока нет...</div>
+            </div>
+        </div>
     </div>
+
+    <div id="transfers" class="tab-content">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px">
+            <div class="glass-form">
+                <h2 style="color: var(--neon-green); text-transform: uppercase;">Рынок Игроков</h2>
+                <div th:each="fp : ${freePlayers}" style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; margin-bottom: 10px">
+                    <div style="flex-grow: 1">
+                        <div th:text="${fp.name}" style="font-weight: bold;"></div>
+                        <div style="color: var(--neon-green); font-size: 12px;" th:text="${fp.price + ' €'}"></div>
+                    </div>
+                    <select th:id="'selectClubP' + ${fp.id}" style="width: 150px; margin: 0">
+                        <option th:each="c : ${clubs}" th:value="${c.id}" th:text="${c.name}"></option>
+                    </select>
+                    <button class="btn btn-buy" th:onclick="'buyPlayer(' + ${fp.id} + ')'">КУПИТЬ</button>
+                </div>
+            </div>
+
+            <div class="glass-form">
+                <h2 style="color: var(--accent-blue); text-transform: uppercase;">Биржа Тренеров</h2>
+                <div th:each="fc : ${freeCoaches}" style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; margin-bottom: 10px">
+                    <div style="flex-grow: 1">
+                        <div th:text="${fc.name}" style="font-weight: bold;"></div>
+                        <div style="color: var(--accent-blue); font-size: 12px;" th:text="${fc.price + ' €'}"></div>
+                    </div>
+                    <select th:id="'selectClubC' + ${fc.id}" style="width: 150px; margin: 0">
+                        <option th:each="c : ${clubs}" th:value="${c.id}" th:text="${c.name}"></option>
+                    </select>
+                    <button class="btn btn-buy" style="background: var(--accent-blue)" th:onclick="'hireCoach(' + ${fc.id} + ')'">НАНЯТЬ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin" class="tab-content">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px">
+            <div class="glass-form">
+                <h3 style="color: var(--accent-gold)">ЗАРЕГИСТРИРОВАТЬ КЛУБ</h3>
+                <input id="in_cn" placeholder="Название команды">
+                <input id="in_cb" type="number" placeholder="Бюджет (€)" value="100000">
+                <button class="btn btn-action" onclick="apiAddClub()">СОЗДАТЬ</button>
+            </div>
+            <div class="glass-form">
+                <h3 style="color: var(--neon-green)">СОЗДАТЬ ИГРОКА</h3>
+                <input id="in_pn" placeholder="Имя игрока">
+                <input id="in_pp" type="number" placeholder="Стоимость (€)" value="5000">
+                <button class="btn btn-action" style="background: var(--neon-green)" onclick="apiAddPlayer()">В БАЗУ</button>
+            </div>
+            <div class="glass-form">
+                <h3 style="color: var(--accent-blue)">НАЙТИ ТРЕНЕРА</h3>
+                <input id="in_con" placeholder="Имя специалиста">
+                <input id="in_cop" type="number" placeholder="Контракт (€)" value="15000">
+                <button class="btn btn-action" style="background: var(--accent-blue)" onclick="apiAddCoach()">В РЕЗЕРВ</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    function addClub() {
-        const name = document.getElementById('clubName').value;
-        if(!name) return alert("Введите название!");
-        fetch('/api/clubs', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name })
-        }).then(() => location.reload());
+    function openTab(id) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
     }
 
-    function buyPlayer() {
-        const clubId = document.getElementById('targetClub').value;
-        const name = document.getElementById('playerName').value;
-        const pos = document.getElementById('playerPosition').value;
-        const num = document.getElementById('playerNumber').value;
-        const price = document.getElementById('transferPrice').value;
-
-        if(!clubId || !name || !num || !price) return alert("Заполни всё, бро!");
-
-        fetch(`/api/players/buy/${clubId}?price=${price}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: name,
-                number: num,
-                position: pos,
-                marketValue: price
-            })
-        }).then(async res => {
-            if(res.ok) location.reload();
-            else alert(await res.text());
-        });
+    // API Вызовы
+    async function apiAddClub() {
+        await fetch('/api/clubs', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:document.getElementById('in_cn').value, balance:document.getElementById('in_cb').value}) });
+        location.reload();
     }
-
-    function deletePlayer(id) {
-        if(confirm('Уволить?')) fetch('/api/players/' + id, { method: 'DELETE' }).then(() => location.reload());
+    async function apiAddPlayer() {
+        await fetch('/api/players', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:document.getElementById('in_pn').value, price:document.getElementById('in_pp').value}) });
+        location.reload();
     }
-
-    function deleteClub(id) {
-        if(confirm('Снести клуб?')) fetch('/api/clubs/' + id, { method: 'DELETE' }).then(() => location.reload());
+    async function apiAddCoach() {
+        await fetch('/api/coaches', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:document.getElementById('in_con').value, price:document.getElementById('in_cop').value}) });
+        location.reload();
+    }
+    async function buyPlayer(id) {
+        const cId = document.getElementById('selectClubP' + id).value;
+        const r = await fetch(`/api/manage/buy-player?clubId=${cId}&playerId=${id}`, {method:'POST'});
+        if (r.ok) location.reload(); else alert(await r.text());
+    }
+    async function hireCoach(id) {
+        const cId = document.getElementById('selectClubC' + id).value;
+        const r = await fetch(`/api/manage/hire-coach?clubId=${cId}&coachId=${id}`, {method:'POST'});
+        if (r.ok) location.reload(); else alert(await r.text());
+    }
+    async function sellPlayer(cId, pId) {
+        await fetch(`/api/manage/sell-player?clubId=${cId}&playerId=${pId}`, {method:'POST'});
+        location.reload();
+    }
+    async function deleteClub(id) {
+        if(confirm('Удалить клуб и расторгнуть все контракты?')) {
+            await fetch('/api/clubs/'+id, {method:'DELETE'});
+            location.reload();
+        }
     }
 </script>
 
